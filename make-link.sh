@@ -1,4 +1,19 @@
 #!/bin/bash
+# 获取GOBING
+GOBIN=$(go env GOBIN)
+echo "GOBIN: $GOBIN"
 
-ln -s ~/work/docker/start ~/work/golang/bin/start                                                                        ✔  base   at 03:28:32 下午 
-ln -s ~/work/docker/stop  ~/work/golang/bin/stop
+# 检查GOBIN是否存在
+if [ -z "$GOBIN" ]; then
+  echo "GOBIN is not set"
+  exit 1
+fi
+
+# 检查GOBIN是否存在
+if [ ! -d "$GOBIN" ]; then
+  echo "GOBIN does not exist"
+  exit 1
+fi
+
+ln -s start $GOBIN/start
+ln -s stop  $GOBIN/stop
