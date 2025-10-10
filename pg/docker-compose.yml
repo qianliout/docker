@@ -1,0 +1,20 @@
+services:
+  postgresql:
+    image: postgres:13
+    container_name: postgresql
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aisoc
+      POSTGRES_PASSWORD: Tensor@20210
+      POSTGRES_DB: aisoc
+      TZ: Asia/Shanghai
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./data:/var/lib/postgresql/data
+    networks:
+      - postgresql-network
+
+networks:
+  postgresql-network:
+    driver: bridge

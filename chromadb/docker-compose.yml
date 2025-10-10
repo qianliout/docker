@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  chromadb:
+    image: ghcr.io/chroma-core/chroma:latest
+    container_name: chromadb
+    environment:
+      - IS_PERSISTENT=TRUE  # 启用持久化
+      - PERSIST_DIRECTORY=/chroma_data  # 持久化目录
+      - CHROMA_DB_BACKEND=sqlite  # 使用 SQLite 作为后端
+    volumes:
+      - /Users/liuqianli/work/docker/chromadb/data:/chroma_data  # 挂载本地目录存储数据
+    ports:
+      - "9100:8000"  # 暴露 API 端口
+    restart: unless-stopped

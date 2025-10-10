@@ -1,0 +1,68 @@
+services:
+  kafka:
+    image: apache/kafka:4.0.1-rc2
+    container_name: kafka
+    hostname: kafka
+    ports:
+      - "9092:9092"
+    environment:
+      # === KRaft 模式配置 ===
+      KAFKA_NODE_ID: 1
+      KAFKA_PROCESS_ROLES: 'broker,controller'
+      KAFKA_CONTROLLER_QUORUM_VOTERS: '1@kafka:9091'
+      
+      # === 网络配置 ===
+      KAFKA_LISTENERS: 'PLAINTEXT://0.0.0.0:9092,CONTROLLER://0.0.0.0:9091'
+      KAFKA_ADVERTISED_LISTENERS: 'PLAINTEXT://localhost:9092'
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: 'PLAINTEXT:PLAINTEXT,CONTROLLER:PLAINTEXT'
+      KAFKA_INTER_BROKER_LISTENER_NAME: 'PLAINTEXT'
+
+      # === 数据目录 ===
+      KAFKA_LOG_DIRS: '/var/lib/kafka/data'
+      KAFKA_DATA_LOG_DIR: '/var/lib/kafka/data'
+
+      # === 其他设置 ===
+      KAFKA_CONTROLLER_LISTENER_NAMES: 'CONTROLLER'
+      KAFKA_SECURITY_PROTOCOL: 'PLAINTEXT'
+
+      # === 副本因子（单节点）===
+      KAFKA_DEFAULT_REPLICATION_FACTOR: 1
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+
+    volumes:
+      - ./kafka-data:/var/lib/kafka/data
+    networks:
+      - kafka-network
+    restart: unless-stopped
+
+
+
+  # ========================
+  # AKHQ (Kafka Web UI)
+  # ========================
+  akhq:
+    image: tchiotludo/akhq:0.26.0
+    container_name: akhq
+    ports:
+      - "8093:8080"  # Web 界面端口
+    environment:
+      AKHQ_CONFIGURATION: |
+        akhq:
+          connections:
+            kafka-cluster:
+              properties:
+                bootstrap.servers: "kafka:9092"
+              topic:
+                # 可选配置
+                default-partitions: 1
+                default-replication-factor: 1
+    depends_on:
+      - kafka
+    networks:
+      - kafka-network
+    restart: unless-stopped
+
+networks:
+  kafka-network:
+    driver: bridge
