@@ -15,5 +15,5 @@ if [ ! -d "$GOBIN" ]; then
   exit 1
 fi
 
-ln -s start $GOBIN/start
-ln -s stop  $GOBIN/stop
+ln -s start.sh $GOBIN/start
+ln -s stop.sh  $GOBIN/stop
