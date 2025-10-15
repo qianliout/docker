@@ -4,7 +4,7 @@
 BASE_DIR="$HOME/work/docker"
 
 # 定义服务列表（使用普通数组替代关联数组）
-SERVICES=("mysql" "redis" "rabbitmq" "nginx" "kafka" "es" "qdrant" "mongodb" "chromadb" "pg")
+SERVICES=("mysql" "redis" "rabbitmq" "nginx" "kafka" "es" "qdrant" "mongodb" "chromadb" "pg" "outback")
 
 # 显示停止菜单
 show_menu() {
@@ -23,6 +23,7 @@ show_menu() {
     echo "mongodb - 停止MongoDB"
     echo "chromadb - 停止Chromadb"
     echo "pg      - 停止Pg"
+    echo "outback - 停止OrbStack outback 虚拟机"
     echo "======================================"
     read -p "请输入选择: " input_services
     
@@ -81,9 +82,20 @@ execute_services() {
     echo "--------------------------------------"
     
     for service in "${services[@]}"; do
-        local script_path="$BASE_DIR/$service/stop.sh"
-        
         echo -n "停止 $service... "
+
+        # 特殊处理 outback 服务
+        if [ "$service" = "outback" ]; then
+            echo "执行: orbctl stop outback"
+            if orbctl stop outback; then
+                echo "成功"
+            else
+                echo "失败"
+            fi
+            continue
+        fi
+
+        local script_path="$BASE_DIR/$service/stop.sh"
         echo "调试: 脚本路径 = $script_path"
         
         # 检查脚本是否存在
