@@ -3,9 +3,13 @@ logs/
 
 es/data
 es/logs
-
+.DS_Store
 mysql/data
 mysql/logs
+
+harbor/log
+harbor/data
+
 
 kafka/kafka-data
 kafka/logs

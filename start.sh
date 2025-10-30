@@ -4,7 +4,8 @@
 BASE_DIR="$HOME/work/docker"
 
 # 定义服务列表（使用普通数组替代关联数组）
-SERVICES=("mysql" "redis" "rabbitmq" "nginx" "kafka" "es" "qdrant" "mongodb" "chromadb" "pg" "outback")
+# SERVICES=("mysql" "redis" "harb" "rabbitmq" "nginx" "kafka" "es" "qdrant" "mongodb" "chromadb" "pg" "outback")
+SERVICES=("mysql" "harbor" "kafka" "outback")
 
 # 显示启动菜单
 show_menu() {
@@ -24,6 +25,7 @@ show_menu() {
   echo "chromadb - 启动Chromadb"
   echo "pg      - 启动Pg"
   echo "outback - 启动OrbStack outback 虚拟机"
+  echo "harbor - 启动harbor"
   echo "======================================"
   read -p "请输入选择: " input_services
 
@@ -83,7 +85,7 @@ execute_services() {
 
   for service in "${services[@]}"; do
     echo -n "启动 $service... "
-    
+
     # 特殊处理 outback 服务
     if [ "$service" = "outback" ]; then
       echo "执行: orbctl start outback"

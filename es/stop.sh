@@ -27,7 +27,7 @@ if [ -z "$(docker-compose -f "$COMPOSE_FILE" -p "$PROJECT_NAME" ps -q)" ]; then
 fi
 
 # 停止并删除服务
-echo "Stopping and removing Elasticsearch and Kibana containers..."
+echo "Stopping Elasticsearch and Kibana containers..."
 docker-compose -f "$COMPOSE_FILE" -p "$PROJECT_NAME" down
 
 echo "Elasticsearch stopped successfully."

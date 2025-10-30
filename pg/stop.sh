@@ -16,7 +16,7 @@ fi
 
 # 停止并移除所有相关的容器、网络和卷
 # "down" 命令是幂等的，无论服务是否正在运行，它都能正确处理
-echo "Stopping and removing PostgreSQL containers..."
+echo "Stopping  PostgreSQL containers..."
 docker-compose -f "$COMPOSE_FILE" -p "$PROJECT_NAME" down
 
 echo "PostgreSQL container stopped successfully."

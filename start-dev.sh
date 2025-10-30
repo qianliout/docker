@@ -4,27 +4,27 @@
 BASE_DIR="$HOME/work/docker"
 
 # 定义服务列表（使用普通数组替代关联数组）
-SERVICES=("mysql" "harbor" "redis" "rabbitmq" "nginx" "kafka" "es" "qdrant" "mongodb" "chromadb" "pg" "outback")
+SERVICES=("mysql" "redis" "harbor" "rabbitmq" "nginx" "kafka" "es" "qdrant" "mongodb" "chromadb" "pg" "outback")
 
-# 显示停止菜单
+# 显示启动菜单
 show_menu() {
   echo "======================================"
-  echo "          服务停止脚本"
+  echo "          服务启动脚本"
   echo "======================================"
-  echo "请选择要停止的服务 (可多选，用空格分隔):"
-  echo "all     - 停止全部服务"
-  echo "mysql   - 停止MySQL"
-  echo "redis   - 停止Redis"
-  echo "rabbitmq - 停止RabbitMQ"
-  echo "nginx   - 停止Nginx"
-  echo "kafka   - 停止Kafka"
-  echo "es      - 停止Elasticsearch"
-  echo "qdrant  - 停止Qdrant"
-  echo "mongodb - 停止MongoDB"
-  echo "chromadb - 停止Chromadb"
-  echo "pg      - 停止Pg"
-  echo "harbor - 停止harbor"
-  echo "outback - 停止OrbStack outback 虚拟机"
+  echo "请选择要启动的服务 (可多选，用空格分隔):"
+  echo "all     - 启动全部服务"
+  echo "mysql   - 启动MySQL"
+  echo "redis   - 启动Redis"
+  echo "rabbitmq - 启动RabbitMQ"
+  echo "nginx   - 启动Nginx"
+  echo "kafka   - 启动Kafka"
+  echo "es      - 启动Elasticsearch"
+  echo "qdrant  - 启动Qdrant"
+  echo "mongodb - 启动MongoDB"
+  echo "chromadb - 启动Chromadb"
+  echo "pg      - 启动Pg"
+  echo "outback - 启动OrbStack outback 虚拟机"
+  echo "harbor - 启动harbor"
   echo "======================================"
   read -p "请输入选择: " input_services
 
@@ -74,21 +74,21 @@ process_selected_services() {
   fi
 }
 
-# 执行停止服务
+# 执行启动服务
 execute_services() {
   local services=("$@")
 
   echo ""
-  echo "开始停止以下服务: ${services[*]}"
+  echo "开始启动以下服务: ${services[*]}"
   echo "--------------------------------------"
 
   for service in "${services[@]}"; do
-    echo -n "停止 $service... "
+    echo -n "启动 $service... "
 
     # 特殊处理 outback 服务
     if [ "$service" = "outback" ]; then
-      echo "执行: orbctl stop outback"
-      if orbctl stop outback; then
+      echo "执行: orbctl start outback"
+      if orbctl start outback; then
         echo "成功"
       else
         echo "失败"
@@ -96,12 +96,13 @@ execute_services() {
       continue
     fi
 
-    local script_path="$BASE_DIR/$service/stop.sh"
+    # 处理其他服务的启动脚本
+    local script_path="$BASE_DIR/$service/start.sh"
     echo "调试: 脚本路径 = $script_path"
 
     # 检查脚本是否存在
     if [ ! -f "$script_path" ]; then
-      echo "失败: 停止脚本不存在 - $script_path"
+      echo "失败: 启动脚本不存在 - $script_path"
       continue
     fi
 
@@ -119,7 +120,7 @@ execute_services() {
       }
     fi
 
-    # 执行停止脚本
+    # 执行启动脚本
     if sh "$script_path"; then
       echo "成功"
     else
@@ -128,7 +129,7 @@ execute_services() {
   done
 
   echo "--------------------------------------"
-  echo "停止操作完成!"
+  echo "启动操作完成!"
 }
 
 # 检查基础目录是否存在
