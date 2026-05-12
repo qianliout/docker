@@ -7,10 +7,11 @@ services:
     ports:
       - "5672:5672"      # AMQP 客户端连接端口
       - "15672:15672"    # Web 管理界面端口
+    env_file:
+      - ../.env
     environment:
-      # 设置默认用户和密码（请修改为自己的）
-      RABBITMQ_DEFAULT_USER: admin
-      RABBITMQ_DEFAULT_PASS: admin123
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
       # 可选：设置虚拟主机
       RABBITMQ_DEFAULT_VHOST: /
     volumes:

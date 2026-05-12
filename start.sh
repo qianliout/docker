@@ -3,9 +3,8 @@
 # 定义服务基础路径
 BASE_DIR="$HOME/work/docker"
 
-# 定义服务列表（使用普通数组替代关联数组）
-# SERVICES=("mysql" "redis" "harb" "rabbitmq" "nginx" "kafka" "es" "qdrant" "mongodb" "chromadb" "pg" "outback")
-SERVICES=("mysql" "harbor" "kafka" "outback")
+# 定义服务列表（使用普通数组替代关联数组）；与 stop.sh / start-dev.sh 一致，含 storya 常用中间件
+SERVICES=("mysql" "redis" "rabbitmq" "pg" "harbor" "kafka" "outback")
 
 # 显示启动菜单
 show_menu() {

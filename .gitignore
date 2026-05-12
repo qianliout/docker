@@ -1,3 +1,4 @@
+.env
 data/
 logs/
 
@@ -21,7 +22,7 @@ rabbitmq/data
 rabbitmq/logs
 
 mongodb/data
-mongodb/logs  
+mongodb/logs
 
 redis/data
 redis/logs
@@ -35,3 +36,5 @@ pg/logs
 one-api/data
 one-api/logs
 one-api/one-api.db
+.env
+.env.example
