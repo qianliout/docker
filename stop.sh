@@ -4,7 +4,7 @@
 BASE_DIR="$HOME/work/docker"
 
 # 定义服务列表（使用普通数组替代关联数组）
-SERVICES=("mysql" "harbor" "redis" "rabbitmq" "nginx" "kafka" "es" "qdrant" "mongodb" "chromadb" "pg" "outback")
+SERVICES=("mysql" "harbor" "redis" "rabbitmq" "nginx" "kafka" "es" "qdrant" "mongodb" "chromadb" "pg" "loki" "outback")
 
 # 显示停止菜单
 show_menu() {
@@ -23,6 +23,7 @@ show_menu() {
   echo "mongodb - 停止MongoDB"
   echo "chromadb - 停止Chromadb"
   echo "pg      - 停止Pg"
+  echo "loki    - 停止 Loki + Grafana（不卸载日志插件）"
   echo "harbor - 停止harbor"
   echo "outback - 停止OrbStack outback 虚拟机"
   echo "======================================"

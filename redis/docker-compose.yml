@@ -13,10 +13,9 @@ services:
     environment:
       - TZ=Asia/Shanghai
     command:
-      - redis-server
-      - /usr/local/etc/redis/redis.conf
-      - --requirepass
-      - ${REDIS_PASSWORD}
+      - sh
+      - -c
+      - exec redis-server /usr/local/etc/redis/redis.conf --requirepass "$$REDIS_PASSWORD"
     networks:
       - redis-network
 

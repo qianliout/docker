@@ -4,7 +4,7 @@
 BASE_DIR="$HOME/work/docker"
 
 # 定义服务列表（使用普通数组替代关联数组）；与 stop.sh / start-dev.sh 一致，含 storya 常用中间件
-SERVICES=("mysql" "redis" "rabbitmq" "pg" "harbor" "kafka" "outback")
+SERVICES=("mysql" "redis" "rabbitmq" "pg" "harbor" "kafka" "loki" "outback")
 
 # 显示启动菜单
 show_menu() {
@@ -23,6 +23,7 @@ show_menu() {
   echo "mongodb - 启动MongoDB"
   echo "chromadb - 启动Chromadb"
   echo "pg      - 启动Pg"
+  echo "loki    - 启动 Loki + Grafana + 安装 Docker Loki 日志插件"
   echo "outback - 启动OrbStack outback 虚拟机"
   echo "harbor - 启动harbor"
   echo "======================================"
