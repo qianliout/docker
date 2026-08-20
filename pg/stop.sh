@@ -3,17 +3,12 @@
 # PostgreSQL Docker Compose 停止脚本（幂等）
 set -e
 cd "$(dirname "$0")"
-ROOT="$(cd .. && pwd)"
-ENV_FILE="$ROOT/.env"
+
 COMPOSE_FILE="docker-compose.yml"
 PROJECT_NAME="postgresql"
 
 dc() {
-  if [ -f "$ENV_FILE" ]; then
-    docker-compose --env-file "$ENV_FILE" -f "$COMPOSE_FILE" -p "$PROJECT_NAME" "$@"
-  else
-    docker-compose -f "$COMPOSE_FILE" -p "$PROJECT_NAME" "$@"
-  fi
+  docker-compose -f "$COMPOSE_FILE" -p "$PROJECT_NAME" "$@"
 }
 
 echo "Stopping PostgreSQL ..."
