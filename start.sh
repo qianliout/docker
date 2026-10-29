@@ -1,145 +1,69 @@
 #!/bin/bash
+# 本机 docker 服务启停。用法: start [服务...] / stop [服务...]，不带参数进入菜单
+BASE_DIR="$(cd "$(dirname "$(readlink -f "$0")")" && pwd)"
 
-# 定义服务基础路径
-BASE_DIR="$HOME/work/docker"
+ACTION=start
+VERB=启动
+if [ "$1" = "--stop" ]; then
+  ACTION=stop
+  VERB=停止
+  shift
+fi
 
-# 定义服务列表（使用普通数组替代关联数组）；与 stop.sh / start-dev.sh 一致，含 storya 常用中间件
-SERVICES=("mysql" "redis" "rabbitmq" "pg" "zymix-mcp-pg" "harbor" "kafka" "loki" "outback")
+# 服务名即子目录名（内含 start.sh / stop.sh）；outback 为 OrbStack 虚拟机
+SERVICES=(
+  "mysql:MySQL 9.7 (3306)"
+  "pg:PostgreSQL 18 (5432)"
+  "redis:Redis 8 (6379)"
+  "rabbitmq:RabbitMQ 4 (5672 / 15672)"
+  "mongodb:MongoDB 9 (27017)"
+  "kafka:Kafka 4 + AKHQ (9092 / 8093)"
+  "es:Elasticsearch + Kibana 9 (9200 / 5601)"
+  "qdrant:Qdrant (6333 / 6334)"
+  "chromadb:ChromaDB (9100)"
+  "loki:Loki + Grafana (3100 / 3000)"
+  "outback:OrbStack outback 虚拟机"
+)
 
-# 显示启动菜单
-show_menu() {
+if [ $# -eq 0 ]; then
   echo "======================================"
-  echo "          服务启动脚本"
+  echo "  服务${VERB}（可多选，空格分隔）"
   echo "======================================"
-  echo "请选择要启动的服务 (可多选，用空格分隔):"
-  echo "all     - 启动全部服务"
-  echo "mysql   - 启动MySQL"
-  echo "redis   - 启动Redis"
-  echo "rabbitmq - 启动RabbitMQ"
-  echo "nginx   - 启动Nginx"
-  echo "kafka   - 启动Kafka"
-  echo "es      - 启动Elasticsearch"
-  echo "qdrant  - 启动Qdrant"
-  echo "mongodb - 启动MongoDB"
-  echo "chromadb - 启动Chromadb"
-  echo "pg      - 启动Pg"
-  echo "zymix-mcp-pg - 启动 zymix MCP 本地开发库 (postgres:16, 55433)"
-  echo "loki    - 启动 Loki + Grafana + 安装 Docker Loki 日志插件"
-  echo "outback - 启动OrbStack outback 虚拟机"
-  echo "harbor - 启动harbor"
-  echo "======================================"
-  read -p "请输入选择: " input_services
-
-  # 如果没有输入任何内容
-  if [ -z "$input_services" ]; then
-    echo "未选择任何服务!"
-    exit 1
-  fi
-
-  # 将输入转换为数组
-  IFS=' ' read -ra selected_services <<<"$input_services"
-
-  # 处理选择的服务
-  process_selected_services
-}
-
-# 处理选择的服务
-process_selected_services() {
-  local services_to_execute=()
-
-  # 检查是否选择了all
-  for service in "${selected_services[@]}"; do
-    if [ "$service" = "all" ]; then
-      # 如果选择了all，则添加所有服务
-      services_to_execute=("${SERVICES[@]}")
-      break
-    fi
+  printf '  %-9s %s\n' all "全部服务"
+  for s in "${SERVICES[@]}"; do
+    printf '  %-9s %s\n' "${s%%:*}" "${s#*:}"
   done
+  read -rp "请输入选择: " -a input
+  set -- "${input[@]}"
+fi
 
-  # 如果没有选择all，则添加选中的服务
-  if [ ${#services_to_execute[@]} -eq 0 ]; then
-    for service in "${selected_services[@]}"; do
-      if [[ " ${SERVICES[@]} " =~ " ${service} " ]]; then
-        services_to_execute+=("$service")
-      else
-        echo "警告: 未知服务 '$service'，已跳过"
-      fi
-    done
-  fi
-
-  # 执行操作
-  if [ ${#services_to_execute[@]} -gt 0 ]; then
-    execute_services "${services_to_execute[@]}"
-  else
-    echo "没有有效的服务选择!"
-    exit 1
-  fi
-}
-
-# 执行启动服务
-execute_services() {
-  local services=("$@")
-
-  echo ""
-  echo "开始启动以下服务: ${services[*]}"
-  echo "--------------------------------------"
-
-  for service in "${services[@]}"; do
-    echo -n "启动 $service... "
-
-    # 特殊处理 outback 服务
-    if [ "$service" = "outback" ]; then
-      echo "执行: orbctl start outback"
-      if orbctl start outback; then
-        echo "成功"
-      else
-        echo "失败"
-      fi
-      continue
-    fi
-
-    # 处理其他服务的启动脚本
-    local script_path="$BASE_DIR/$service/start.sh"
-    echo "调试: 脚本路径 = $script_path"
-
-    # 检查脚本是否存在
-    if [ ! -f "$script_path" ]; then
-      echo "失败: 启动脚本不存在 - $script_path"
-      continue
-    fi
-
-    # 检查脚本是否有执行权限
-    if [ ! -x "$script_path" ]; then
-      chmod +x "$script_path"
-    fi
-
-    # 切换到服务目录执行脚本
-    local service_dir="$BASE_DIR/$service"
-    if [ -d "$service_dir" ]; then
-      cd "$service_dir" || {
-        echo "失败: 无法切换到目录 $service_dir"
-        continue
-      }
-    fi
-
-    # 执行启动脚本
-    if sh "$script_path"; then
-      echo "成功"
-    else
-      echo "失败"
-    fi
-  done
-
-  echo "--------------------------------------"
-  echo "启动操作完成!"
-}
-
-# 检查基础目录是否存在
-if [ ! -d "$BASE_DIR" ]; then
-  echo "错误: 基础目录不存在: $BASE_DIR"
-  echo "请修改脚本中的 BASE_DIR 变量为正确的路径"
+if [ $# -eq 0 ]; then
+  echo "未选择任何服务"
   exit 1
 fi
 
-# 显示菜单并执行
-show_menu
+if [[ " $* " == *" all "* ]]; then
+  set --
+  for s in "${SERVICES[@]}"; do
+    set -- "$@" "${s%%:*}"
+  done
+fi
+
+failed=()
+for svc in "$@"; do
+  echo "---- ${VERB} $svc"
+  if [ "$svc" = "outback" ]; then
+    orbctl "$ACTION" outback || failed+=("$svc")
+  elif [ -f "$BASE_DIR/$svc/$ACTION.sh" ]; then
+    bash "$BASE_DIR/$svc/$ACTION.sh" || failed+=("$svc")
+  else
+    echo "未知服务: $svc"
+    failed+=("$svc")
+  fi
+done
+
+if [ ${#failed[@]} -gt 0 ]; then
+  echo "${VERB}失败: ${failed[*]}"
+  exit 1
+fi
+echo "${VERB}完成"

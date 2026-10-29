@@ -1,28 +1,17 @@
+name: rabbitmq
+
 services:
   rabbitmq:
-    # 使用官方镜像，带 management 插件
-    image: rabbitmq:management
+    image: rabbitmq:4.4.0-management
     container_name: rabbitmq
-    hostname: rabbitmq
-    ports:
-      - "5672:5672"      # AMQP 客户端连接端口
-      - "15672:15672"    # Web 管理界面端口
-    env_file:
-      - ../.env
-    environment:
-      RABBITMQ_DEFAULT_USER: ${RABBITMQ_DEFAULT_USER}
-      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_DEFAULT_PASS}
-      # 可选：设置虚拟主机
-      RABBITMQ_DEFAULT_VHOST: /
-    volumes:
-      # 持久化数据目录，保证重启后数据不丢失
-      - ./data:/var/lib/rabbitmq
-      # （可选）挂载配置文件
-      # - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-    networks:
-      - messaging-network
+    hostname: rabbitmq  # 固定节点名 rabbit@rabbitmq，否则重建容器后数据目录对不上
     restart: unless-stopped
-
-networks:
-  messaging-network:
-    driver: bridge
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+      TZ: Asia/Shanghai
+    ports:
+      - "5672:5672"    # AMQP
+      - "15672:15672"  # 管理界面
+    volumes:
+      - ./data:/var/lib/rabbitmq

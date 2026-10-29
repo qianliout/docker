@@ -8,8 +8,6 @@ es/logs
 mysql/data
 mysql/logs
 
-harbor/log
-harbor/data
 
 
 kafka/kafka-data

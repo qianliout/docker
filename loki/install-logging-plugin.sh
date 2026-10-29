@@ -6,7 +6,7 @@ if docker plugin ls --format '{{.Name}}' 2>/dev/null | grep -q '^loki'; then
   exit 0
 fi
 
-VERSION="${LOKI_DOCKER_DRIVER_VERSION:-3.7.0}"
+VERSION="${LOKI_DOCKER_DRIVER_VERSION:-3.7.9}"
 ARCH=$(uname -m)
 case "$ARCH" in
 arm64 | aarch64) PLUGIN_TAG="${VERSION}-arm64" ;;

@@ -1,6 +1,8 @@
+name: mysql
+
 services:
   mysql:
-    image: mysql:8.0
+    image: mysql:9.7.4  # 当前 LTS
     container_name: mysql
     restart: unless-stopped
     environment:
@@ -10,10 +12,4 @@ services:
       - "3306:3306"
     volumes:
       - ./data:/var/lib/mysql
-      - ./conf:/etc/mysql/conf.d
-    networks:
-      - mysql-network
-
-networks:
-  mysql-network:
-    driver: bridge
+      - ./conf:/etc/mysql/conf.d:ro
