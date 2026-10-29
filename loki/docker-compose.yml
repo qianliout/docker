@@ -16,7 +16,7 @@ services:
 
   grafana:
     image: grafana/grafana:13.3.0
-    container_name: loki-grafana
+    container_name: grafana
     restart: unless-stopped
     environment:
       TZ: Asia/Shanghai

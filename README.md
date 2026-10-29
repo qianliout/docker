@@ -18,19 +18,19 @@ stop pg redis
 
 单个服务也可以在目录内执行 `./start.sh` / `./stop.sh`（等价于 `docker compose up -d` / `down`，数据保留在 `data/`）。
 
-| 服务 | 版本 | 地址 | 账号 / 密码 |
-|---|---|---|---|
-| mysql | 9.7 LTS | localhost:3306 | root / root |
-| pg | PostgreSQL 18 | localhost:5432 | postgres / postgres |
-| redis | 8.10 | localhost:6379 | 密码 redis |
-| rabbitmq | 4.4 | localhost:5672，管理界面 http://localhost:15672 | admin / admin |
-| mongodb | 9.0 | localhost:27017 | root / root |
-| kafka | 4.4 + AKHQ | 宿主机 localhost:9092，容器间 kafka:29092，AKHQ http://localhost:8093 | 无 |
-| es | Elasticsearch / Kibana 9.5 | http://localhost:9200，Kibana http://localhost:5601 | 无（关闭了安全认证） |
-| qdrant | 1.20 | REST localhost:6333，gRPC localhost:6334 | 无 |
-| chromadb | 1.5 | http://localhost:9100 | 无 |
-| loki | Loki 3.7 / Grafana 13 | Loki http://localhost:3100，Grafana http://localhost:3000 | admin / admin |
-| outback | OrbStack 虚拟机 | | |
+| 服务（目录） | 容器名 | 版本 | 地址 | 账号 / 密码 |
+|---|---|---|---|---|
+| mysql | mysql | 9.7 LTS | localhost:3306 | root / root |
+| pg | postgresql | PostgreSQL 18 | localhost:5432 | postgres / postgres |
+| redis | redis | 8.10 | localhost:6379 | 密码 redis |
+| rabbitmq | rabbitmq | 4.4 | localhost:5672，管理界面 http://localhost:15672 | admin / admin |
+| mongodb | mongodb | 9.0 | localhost:27017 | root / root |
+| kafka | kafka, akhq | 4.4 + AKHQ | 宿主机 localhost:9092，容器 host.docker.internal:29092，AKHQ http://localhost:8093 | 无 |
+| es | elasticsearch, kibana | Elasticsearch / Kibana 9.5 | http://localhost:9200，Kibana http://localhost:5601 | 无（关闭了安全认证） |
+| qdrant | qdrant | 1.20 | REST localhost:6333，gRPC localhost:6334 | 无 |
+| chromadb | chromadb | 1.5 | http://localhost:9100 | 无 |
+| loki | loki, grafana | Loki 3.7 / Grafana 13 | Loki http://localhost:3100，Grafana http://localhost:3000 | admin / admin |
+| outback |  | OrbStack 虚拟机 | | |
 
 ## Loki 日志插件
 

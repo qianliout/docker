@@ -3,4 +3,4 @@
 set -e
 cd "$(dirname "$0")"
 docker compose up -d
-echo "Kafka: localhost:9092  AKHQ: http://localhost:8093"
+echo "Kafka: 宿主机 localhost:9092，容器 host.docker.internal:29092  AKHQ: http://localhost:8093"
